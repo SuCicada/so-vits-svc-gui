@@ -7,7 +7,7 @@ import soundfile
 import torch
 
 from inference.infer_tool import Svc
-from . import tts_utils
+from . import tts_utils,file_util
 from .audio_utils import modify_speed
 
 logging.getLogger('numba').setLevel(logging.INFO)
@@ -69,8 +69,9 @@ class SvcInfer:
         audio = (audio / np.iinfo(audio.dtype).max).astype(np.float32)
         if len(audio.shape) > 1:
             audio = librosa.to_mono(audio.transpose(1, 0))
-        with tempfile.NamedTemporaryFile(mode='w+', delete=True) as temp_file:
-            temp_path = temp_file.name
+        with file_util.MyNamedTemporaryFile() as temp_path:
+        # _，tmp_filetempfile.mkstemp()
+            # temp_path = temp_file.name
             soundfile.write(temp_path, audio, sampling_rate, format="wav")
             # os.remove(temp_path)
             target_sampling_rate, target_audio = transform_audio(temp_path, self.svc, **options)

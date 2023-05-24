@@ -12,10 +12,10 @@ from tools.infer_base import SvcInfer
 
 
 svcInfer: SvcInfer = SvcInfer(
-    model_path="/Users/peng/PROGRAM/GitHub/so-vits-svc/lain/G_256800_infer.pth",
-    config_path="/Users/peng/PROGRAM/GitHub/so-vits-svc/lain/config.json",
-    cluster_model_path="/Users/peng/PROGRAM/GitHub/so-vits-svc/logs/lain/kmeans_10000.pt",
-    hubert_model_path="/Users/peng/PROGRAM/GitHub/so-vits-svc/hubert/checkpoint_best_legacy_500.pt"
+    model_path="models/G_256800_infer.pth",
+    config_path="models/config.json",
+    cluster_model_path="models/kmeans_10000.pt",
+    hubert_model_path="models/checkpoint_best_legacy_500.pt"
 )
 
 # print(sounddevice.query_devices())
@@ -25,7 +25,7 @@ def tts():
         tts_engine="gtts",
         text="私はどこ? あなたは誰? ",
         language="ja",
-        speed=1.0,
+        speed=1.1,
 
         # text="我在哪里，你是谁",
         # language="zh",

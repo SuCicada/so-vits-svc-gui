@@ -191,6 +191,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--model_path', type=str, help='model_path')
 parser.add_argument('--config_path', type=str, help='config_path')
 parser.add_argument('--cluster_model_path', type=str, help='cluster_model_path')
+parser.add_argument("--hubert_model_path", type=str, help='hubert_model_path')
 parser.add_argument('--debug', action='store_true', help='debug')
 args = parser.parse_args()
 
@@ -198,7 +199,9 @@ args = parser.parse_args()
 def new_svc_infer():
     return SvcInfer(model_path=args.model_path,
                     config_path=args.config_path,
-                    cluster_model_path=args.cluster_model_path)
+                    cluster_model_path=args.cluster_model_path,
+                    hubert_model_path=args.hubert_model_path
+                    )
 
 
 grVits = VitsGradio()

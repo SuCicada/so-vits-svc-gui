@@ -5,6 +5,7 @@ from typing import Union, Tuple
 import numpy
 import soundfile
 from pydub import AudioSegment
+from . import file_util
 
 
 def numpy_to_tmp_file(sampling_rate, audio_data: numpy.ndarray) -> str:
@@ -31,8 +32,9 @@ def numpy_to_mem_file(sampling_rate: int, audio_data: numpy.ndarray) -> io.Bytes
 def modify_speed(sampling_rate, audio_data: numpy.ndarray, speed=1.25) -> numpy.ndarray:
     print("modify_speed", speed)
     # wav = numpy_to_mem_file(audio_data, sampling_rate, )
-    with tempfile.NamedTemporaryFile(mode='w+', delete=True) as temp_file:
-        temp_path = temp_file.name
+    # with tempfile.NamedTemporaryFile(mode='w+', delete=True) as temp_file:
+    with file_util.MyNamedTemporaryFile() as temp_path:
+        # temp_path = temp_file.name
         soundfile.write(temp_path, audio_data, sampling_rate, format="wav")
         audio = AudioSegment.from_file(temp_path)
         # audio = audio.set_channels(1).set_sample_width(2)  # Ensure the audio is mono and 16-bit
@@ -51,10 +53,11 @@ def modify_speed(sampling_rate, audio_data: numpy.ndarray, speed=1.25) -> numpy.
         # y_stretch = pyrb.time_stretch(y, sr, speed)
         # # Play back extra low tones
         # y_shift = pyrb.pitch_shift(y, sr, speed)
-        with tempfile.NamedTemporaryFile(mode='w+', delete=True) as temp_file2:
+        # with tempfile.NamedTemporaryFile(mode='w+', delete=True) as temp_file2:
+        with file_util.MyNamedTemporaryFile() as temp_path2:
             # sf.write(temp_file2.name, y_stretch, sr, format='wav')
-            soundfile.write(temp_file2.name, numpy_array, sampling_rate, format="wav")
-            _, audio = wav_to_numpy(temp_file2.name)
+            soundfile.write(temp_path2, numpy_array, sampling_rate, format="wav")
+            _, audio = wav_to_numpy(temp_path2)
             return audio
             # numpy_array = np.array(audio.get_array_of_samples())
             # return numpy_array
@@ -120,7 +123,8 @@ def merge_audio(audio_file1: Union[str, Tuple[int, np.ndarray]],
     # 将两个音频文件进行合并
     combined = audio1.overlay(audio2)
     # 保存合并后的音频文件
-    with tempfile.NamedTemporaryFile(mode='w+', delete=True) as temp_file2:
-        combined.export(temp_file2.name, format="wav")
-        combined_sampling_rate, combined_audio = wav_to_numpy(temp_file2.name)
+    # with tempfile.NamedTemporaryFile(mode='w+', delete=True) as temp_file2:
+    with file_util.MyNamedTemporaryFile() as temp_path:
+        combined.export(temp_path, format="wav")
+        combined_sampling_rate, combined_audio = wav_to_numpy(temp_path)
         return combined_sampling_rate, combined_audio
